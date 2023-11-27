@@ -10,6 +10,7 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+
 class _LoginPageState extends State<LoginPage> {
   String mobileNumber = "";
   bool changeButton = false;
@@ -17,6 +18,13 @@ class _LoginPageState extends State<LoginPage> {
   String enteredOtp = "";
   String verifyOtpError = "";
   String mobileNumberError = "";
+
+  @override
+  void initState() {
+    super.initState();
+    checkLoggedInUser(); // Check if the user is already logged in
+  }
+
 
    final FlutterSecureStorage storage = FlutterSecureStorage();
 
@@ -53,6 +61,14 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         verifyOtpError = "Incorrect OTP. Please try again.";
       });
+    }
+  }
+
+   void checkLoggedInUser() async {
+    final savedMobileNumber = await storage.read(key: 'mobileNumber');
+    if (savedMobileNumber != null) {
+      // If mobile number is found in storage, navigate to the home page
+      Navigator.pushReplacementNamed(context, MyRoute.homeRoute);
     }
   }
 
