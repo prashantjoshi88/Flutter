@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:catlog/utils/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   String enteredOtp = "";
   String verifyOtpError = "";
   String mobileNumberError = "";
+
+   final FlutterSecureStorage storage = FlutterSecureStorage();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -36,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void verifyOtp(BuildContext context) {
+  Future<void> verifyOtp(BuildContext context) async {
     setState(() {
       
     verifyOtpError = "";
@@ -44,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     // Concatenate the OTP digits for verification
     enteredOtp = otpControllers.map((controller) => controller.text).join();
     if (enteredOtp == "123456") {
+      await storage.write(key: 'mobileNumber', value: mobileNumber);
       Navigator.pushNamed(context, MyRoute.userDetailsRoute);
     } else {
       setState(() {

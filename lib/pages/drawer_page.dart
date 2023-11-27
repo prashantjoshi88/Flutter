@@ -1,17 +1,31 @@
+// drawer_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:catlog/utils/routes.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DrawerPage extends StatelessWidget {
+  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+
+  Future<void> _clearStoredData() async {
+    // await _secureStorage.delete(key: 'firstName');
+    // await _secureStorage.delete(key: 'lastName');
+    // await _secureStorage.delete(key: 'email');
+    await _secureStorage.deleteAll();
+
+    // Add other keys you want to clear
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         children: [
+          // Other drawer items
           ListTile(
             leading: Icon(Icons.person),
             title: Text('My Profile'),
             onTap: () {
-              // Navigate to the profile page
               Navigator.pushNamed(context, MyRoute.myProfileRoute);
             },
           ),
@@ -19,8 +33,10 @@ class DrawerPage extends StatelessWidget {
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             onTap: () {
-              // Navigate to the sign-in page when logout is pressed
-              Navigator.pushNamed(context, MyRoute.loginRoute);
+              // Clear stored data and navigate to the login page
+              _clearStoredData().then((_) {
+                Navigator.pushNamed(context, MyRoute.loginRoute);
+              });
             },
           ),
         ],
